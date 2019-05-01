@@ -213,10 +213,10 @@ class drawingBoard:
             self.origin_y = self.size_y // 2
         elif origin_position == 'left_top':
             self.origin_x = 0
-            self.origin_y = self.size_y
+            self.origin_y = 0
         elif origin_position == 'left_bottom':
             self.origin_x = 0
-            self.origin_y = 0
+            self.origin_y = self.size_y
         elif origin_position == 'left_center':
             self.origin_x = 0
             self.origin_y = self.size_y // 2
@@ -225,13 +225,21 @@ class drawingBoard:
             self.origin_y = self.size_y // 2
         elif origin_position == 'right_bottom':
             self.origin_x = self.size_x
-            self.origin_y = 0
+            self.origin_y = self.size_y
         elif origin_position == 'right_top':
             self.origin_x = self.size_x
-            self.origin_y = self.size_y
+            self.origin_y = 0
         else:
             self.origin_x = origin_x
             self.origin_y = origin_y
+
+        # if not self.orientacion_x:
+        #     origin_x = self.size_x - origin_x
+        # if self.orientacion_y:
+        #      origin_y = self.size_y - origin_y
+
+        # self.origin_x, self.origin_y = self.convert(self.origin_x, self.origin_y)
+
     def setSize(self, size_x=0, size_y=0, rerange = True):
         self.size_x = size_x
         self.size_y = size_y
@@ -286,15 +294,27 @@ class drawingBoard:
         self.orientacion_x = orientacion_x
         self.orientacion_y = orientacion_y
     def getMouse(self):
-        self.board.getMouse()
+        return self.board.getMouse()
     def convert(self, x, y):
         x = x * self.scale_x
-        x = x + self.origin_x
-        if not self.orientacion_x: x = self.size_x - x
+        if self.orientacion_x:
+            x = self.origin_x + x
+        else:
+            x = self.origin_x - x
+
+        # x = x + self.origin_x
+        # if not self.orientacion_x:
+        #     x = self.size_x - x
+
         y = y * self.scale_y
-        y = y + self.origin_y
-        if self.orientacion_y: y = self.size_y - y
-        return x,y
+        if self.orientacion_y:
+            y = self.origin_y + y
+            # y = self.size_y - y
+        else:
+            y = self.origin_y - y
+
+
+        return x, y
     def point(self, x=0, y=0, width = 1, color = None, visibility = True):
         if color==None:
             color = self.pen_color
@@ -526,78 +546,21 @@ class drawingBoard:
 if __name__ == "__main__":
 
     DB = drawingBoard(500, 500)
-    DB.setOrigin("center")
-    # DB.setRange(100,6,False)
-    # p1 = DB.point(0,0,3)
-    # p2 = DB.point(0,3,3,'green')
-    # l = DB.line(0, 0, 40, 40)
-    # r = DB.rect(0, 0, 40, 40, color='green')
-    # spr = Sprite()
-    # spr.add(r, c1, c2)
-    # spr.draw()
-    # DB.getMouse()
-    # for i in range(1,100):
-    #     spr.move(1,0)
-    # DB.getMouse()
-    # for i in range(1,10):
-    #     l.rotate(pi/6, 0, 0)
-    #     DB.getMouse()
-    p01 = Point(0,0)
-    p02 = Point(0, 40)
-    p03 = Point(40,40)
-    p04 = Point(40,0)
-    plg = DB.polygon(p01,p02,p03, p04, color='green')
-
-    c1 = DB.circle(15,35,7)
-    c2 = DB.circle(30,35,7)
-
-    spr = Sprite()
-    spr.add(plg, c1, c2)
-    spr.draw()
-    # DB.getMouse()
-
-    crc = DB.circle(100,100,20)
-    ln  = DB.line(100,100,80,80)
+    DB.setOrientahion(True, True)
+    DB.setOrigin("free",0,0)
+    # DB.setOrigin("center")
+    p0 = DB.point(0,0,width=10,color = 'red')
+    p00 = DB.point(0,100,width=10,color = 'green')
+    p01 = DB.point(0,-100,width=10,color = 'blue')
+    p10 = DB.point(100,0,width=10,color = 'green')
+    p11 = DB.point(-100,0,width=10,color = 'blue')
+    p1 = DB.point(90,90,width=3,color = 'green')
+    p2 = DB.point(130,130,width=3,color = 'black')
+    l1 = DB.line(0,-500,0, 500)
+    l2 = DB.line(-500,0,500, 0)
+    r = DB.rect(100,100,120,120)
     DB.getMouse()
-    crc.rotate(pi/6,0,0)
-    ln.rotate(pi/6,0,0)
-    DB.getMouse()
-    ln.rotate(pi/6,0,0)
-    crc.rotate(pi/6,0,0)
-    DB.getMouse()
-    ln.rotate(pi/6,0,0)
-    crc.rotate(pi/6,0,0)
-    DB.getMouse()
-    ln.rotate(pi/6,0,0)
-    crc.rotate(pi/6,0,0)
-    DB.getMouse()
-    ln.rotate(pi/6,0,0)
-    crc.rotate(pi/6,0,0)
-    DB.getMouse()
-    ln.rotate(pi/6,0,0)
-    crc.rotate(pi/6,0,0)
-    DB.getMouse()
+    for i in range(3):
+        r.move(0,10)
+        DB.getMouse()
 
-    # for i in range(1,10):
-    #     spr.rotate(pi/6)
-    #     DB.getMouse()
-
-
-
-    # plg.draw(DB.board)
-    # DB.getMouse()
-    # for i in range(1,10):
-    #     plg.rotate(pi/6)
-    #     DB.getMouse()
-    # DB.getMouse()
-    # DB.drawGrid(2, 1, color='green', grid_text=True)
-    # DB.getMouse()
-    # DB.setBorders(-1, -1, 4, 4, False)
-    # DB.getMouse()
-    # DB.clear(fast=False)
-    # DB.getMouse()
-    # # for i in range(1,10):
-    # #     # DB.setBorders(-1+i, -1, 4+i, 4, False)
-    # #     # p2.moveTo(i*0.1,1)
-    # #     l1.move(0.1,0)
-    # #     DB.getMouse()
